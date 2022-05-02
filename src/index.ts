@@ -1,5 +1,14 @@
-import { ZktecoService } from "./zkteco.service";
+import path from "path";
+import { AssistanceService } from "./service/assistance.service";
+import { UserService } from "./service/user.service";
 
-const zk = new ZktecoService("192.168.100.201");
+export class Zkteco {
+  private clock = path.resolve(__dirname, "../clock.exe");
+  public assistance: AssistanceService;
+  public user: UserService;
 
-zk.getUsers().then((res) => console.log(res.total));
+  constructor(private ip: string) {
+    this.user = new UserService(this.clock, this.ip);
+    this.assistance = new AssistanceService(this.clock, this.ip);
+  }
+}
