@@ -1,5 +1,5 @@
 import { exec, execSync } from "child_process";
-import { IAssistanceEntity } from "interfaces/assistance.entity";
+import { IAssistanceEntity } from "../interfaces/assistance.entity";
 
 export class AssistanceService {
   constructor(private clock: string, private ip: string) {}

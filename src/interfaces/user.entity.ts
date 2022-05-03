@@ -1,4 +1,4 @@
-import { PermissionsEnum } from "enums/permissions.enum";
+import { PermissionsEnum } from "../enums/permissions.enum";
 import { FingerPrintEntity } from "./finger-print.entity";
 
 export interface UserEntity {

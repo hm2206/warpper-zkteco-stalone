@@ -1,5 +1,4 @@
-import { UserEntity } from "interfaces/user.entity";
-import * as path from "path";
+import { UserEntity } from "../interfaces/user.entity";
 import { exec, execSync } from "child_process";
 import { IUserCreateDto } from "../interfaces/user-create.dto";
 
