@@ -1,4 +1,9 @@
-import { exec, execSync } from "child_process";
+/* eslint-disable no-async-promise-executor */
+/* eslint-disable node/no-unsupported-features/node-builtins */
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable quotes */
+import { exec } from "child_process";
 import { IAssistanceEntity } from "../interfaces/assistance.entity";
 
 export class AssistanceService {
@@ -9,14 +14,28 @@ export class AssistanceService {
     assistencias: IAssistanceEntity[];
   }> {
     const command = "getrecordsattendances";
-    return new Promise((resolve, reject) => {
+    return new Promise(async (resolve, reject) => {
       try {
-        const execute = execSync(`${this.clock} "${this.ip}" "${command}"`);
-        const resultJSON: any = JSON.parse(execute.toString("utf-8"));
-        resultJSON.assistencias = resultJSON.assistencias
-          ? resultJSON.assistencias
-          : [];
-        resolve(resultJSON);
+        exec(
+          `${this.clock} "${this.ip}" "${command}"`,
+          (error, stdout, stderr) => {
+            if (error) return reject(error);
+
+            if (stderr) {
+              return reject(new Error(stderr));
+            }
+
+            try {
+              const resultJSON: any = JSON.parse(stdout || "{}");
+              resultJSON.assistencias = resultJSON.assistencias
+                ? resultJSON.assistencias
+                : [];
+              return resolve(resultJSON);
+            } catch (err) {
+              return reject(err);
+            }
+          }
+        );
       } catch (error) {
         reject(error);
       }

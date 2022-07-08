@@ -1,5 +1,8 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable prettier/prettier */
+/* eslint-disable quotes */
 import { UserEntity } from "../interfaces/user.entity";
-import { exec, execSync } from "child_process";
+import { exec } from "child_process";
 import { IUserCreateDto } from "../interfaces/user-create.dto";
 
 export class UserService {
@@ -9,10 +12,26 @@ export class UserService {
     const command = "usersearchall";
     return new Promise((resolve, reject) => {
       try {
-        const execute = execSync(`${this.clock} "${this.ip}" "${command}"`);
-        const resultJSON: any = JSON.parse(execute.toString("utf-8"));
-        resultJSON.usuarios = resultJSON.usuarios ? resultJSON.usuarios : [];
-        resolve(resultJSON);
+        exec(
+          `${this.clock} "${this.ip}" "${command}"`,
+          (error, stdout, stderr) => {
+            if (error) return reject(error);
+
+            if (stderr) {
+              return reject(new Error(stderr));
+            }
+
+            try {
+              const resultJSON: any = JSON.parse(stdout || "{}");
+              resultJSON.usuarios = resultJSON.usuarios
+                ? resultJSON.usuarios
+                : [];
+              return resolve(resultJSON);
+            } catch (err) {
+              return reject(err);
+            }
+          }
+        );
       } catch (error) {
         reject(error);
       }
@@ -38,11 +57,26 @@ export class UserService {
     const command = "usersearch";
     return new Promise((resolve, reject) => {
       try {
-        const execute = execSync(
-          `${this.clock} "${this.ip}" "${command}" "${NumeroCredencial}"`
+        exec(
+          `${this.clock} "${this.ip}" "${command}" "${NumeroCredencial}"`,
+          (error, stdout, stderr) => {
+            if (error) return reject(error);
+
+            if (stderr) {
+              return reject(new Error(stderr));
+            }
+
+            try {
+              const resultJSON: any = JSON.parse(stdout || "{}");
+              resultJSON.usuarios = resultJSON.usuarios
+                ? resultJSON.usuarios
+                : [];
+              return resolve(resultJSON);
+            } catch (err) {
+              return reject(err);
+            }
+          }
         );
-        const resultJSON = JSON.parse(execute.toString("utf-8"));
-        resolve(resultJSON);
       } catch (error) {
         reject(error);
       }

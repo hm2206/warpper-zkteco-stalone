@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 import path from "path";
 import { AssistanceService } from "./service/assistance.service";
 import { UserService } from "./service/user.service";
