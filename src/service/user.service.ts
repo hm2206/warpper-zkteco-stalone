@@ -43,10 +43,15 @@ export class UserService {
     return new Promise((resolve, reject) => {
       try {
         const commandExecute = `${this.clock} "${this.ip}" "${command}" "${payload.numberCredential}" "${payload.Nombre}" "${payload.permiso}" "${payload.IndexHuella}" "${payload.b64Huella}"`;
-        exec(commandExecute, (err) => {
-          if (err) throw err;
+        exec(commandExecute, (error, stdout, stderr) => {
+          if (error) return reject(error);
+
+          if (stderr) {
+            return reject(new Error(stderr));
+          }
+
+          return resolve(true);
         });
-        resolve(true);
       } catch (error) {
         reject(error);
       }
@@ -89,11 +94,16 @@ export class UserService {
       try {
         exec(
           `${this.clock} "${this.ip}" "${command}" "${NumeroCredencial}"`,
-          (err) => {
-            if (err) throw err;
+          (error, stdout, stderr) => {
+            if (error) return reject(error);
+
+            if (stderr) {
+              return reject(new Error(stderr));
+            }
+
+            resolve(true);
           }
         );
-        resolve(true);
       } catch (error) {
         reject(error);
       }

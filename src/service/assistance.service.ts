@@ -46,10 +46,18 @@ export class AssistanceService {
     const command = "deleterecordsattendances";
     return new Promise((resolve, reject) => {
       try {
-        exec(`${this.clock} "${this.ip}" "${command}"`, (err) => {
-          if (err) throw err;
-        });
-        resolve(true);
+        exec(
+          `${this.clock} "${this.ip}" "${command}"`,
+          (error, stdout, stderr) => {
+            if (error) return reject(error);
+
+            if (stderr) {
+              return reject(new Error(stderr));
+            }
+
+            resolve(true);
+          }
+        );
       } catch (error) {
         reject(error);
       }
